@@ -43,13 +43,12 @@ printf "\n\nConfiguring hardened compiler options for xhyve…\n"
 sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|;" config.mk
 
 set -e
+#  --param ssp-buffer-size=4 \\
+#  -D_FORTIFY_SOURCE=2 \\
 printf "\nCFLAGS_SECURITY := \\
-  -mmacosx-version-min=10.11 \\
   -ftrapv \\
   -fstack-protector \\
-  --param ssp-buffer-size=4 \\
   -fno-strict-overflow \\
-  -D_FORTIFY_SOURCE=2 \\
   -Wformat \\
   -Wformat-security \
 " >> config.mk

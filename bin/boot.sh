@@ -19,13 +19,14 @@ IMG_HDD1="-s 4:1,ahci-hd,${HDD1}"
 BOOTVOLUME="${HDD1}"
 
 UUID="-U 13725C2F-FF66-4F9D-AD7F-D3FC94FBF40F"
-MEM="-m 6G"
+MEM="-m 5120"
 SMP="-c 4"
 NET="-s 2:0,virtio-net"
 PCI_DEV="-s 0:0,hostbridge"
 LPC_DEV="-s 31,lpc -l com1,stdio"
 ACPI="-A"
-OPTIONS="-w -x -W -H"
+# OPTIONS="-w -H"
+# EXPERIMENTAL_OPTIONS="-x -W"
 
 #
 # start HardenedBSD:
@@ -42,5 +43,6 @@ sudo bin/xhyve \
     ${IMG_HDD0} \
     ${IMG_HDD1} \
     ${OPTIONS} \
+    ${EXPERIMENTAL_OPTIONS} \
     -f fbsd,${USERBOOT},${BOOTVOLUME},"${KERNELENV}"
 
