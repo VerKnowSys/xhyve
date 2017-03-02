@@ -39,22 +39,22 @@ done
 
 
 printf "\n\nConfiguring hardened compiler options for xhyve…\n"
-# sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-O3|;" config.mk
+sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-O3|;" config.mk
 
-# set -e
-# printf "\nCFLAGS_SECURITY := \\
-#   -ftrapv \\
-#   -fstack-protector \\
-#   -fstack-protector-strong \\
-#   -fstack-protector-all \\
-#   --param ssp-buffer-size=4 \\
-#   -fno-strict-overflow \\
-#   -D_FORTIFY_SOURCE=2 \\
-#   -Wformat \\
-#   -Wformat-security \\
-#   -fPIC \\
-#   -g \
-# " >> config.mk
+set -e
+printf "\nCFLAGS_SECURITY := \\
+  -ftrapv \\
+  -fstack-protector \\
+  -fstack-protector-strong \\
+  -fstack-protector-all \\
+  --param ssp-buffer-size=4 \\
+  -fno-strict-overflow \\
+  -D_FORTIFY_SOURCE=2 \\
+  -Wformat \\
+  -Wformat-security \\
+  -fPIC \\
+  -g \
+" >> config.mk
 set +e
 sed -i '' -e 's|en_US.US-ASCII|en_GB.UTF-8|;' config.mk
 set -e
