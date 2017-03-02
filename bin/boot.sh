@@ -7,7 +7,7 @@ KERNELENV=""
 HDD0="/Data/ISO/HardenedBSD-11-STABLE-v46.15-amd64-memstick.img"
 
 # FreeBSD data disk:
-HDD1="/Studio/VMs/xhyve.disks/xhyve1.dmg"
+HDD1="/dev/rdisk7"
 
 IMG_HDD0="-s 4:0,ahci-hd,${HDD0}"
 IMG_HDD1="-s 4:1,ahci-hd,${HDD1}"
