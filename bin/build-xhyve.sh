@@ -43,6 +43,8 @@ sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-O3|;" config.mk
 
 set -e
 printf "\nCFLAGS_SECURITY := \\
+  -arch x86_64 \\
+  -mmacosx-version-min=10.11 \\
   -ftrapv \\
   -fstack-protector \\
   -fstack-protector-strong \\
@@ -52,8 +54,7 @@ printf "\nCFLAGS_SECURITY := \\
   -D_FORTIFY_SOURCE=2 \\
   -Wformat \\
   -Wformat-security \\
-  -fPIC \\
-  -g \
+  -fPIC \
 " >> config.mk
 set +e
 sed -i '' -e 's|en_US.US-ASCII|en_GB.UTF-8|;' config.mk
@@ -62,7 +63,7 @@ set -e
 printf "\n\nBuilding xhyve…\n"
 V=1 make all
 
-printf "\n\nBuilding userboot.so…\n"
+printf "\n\nCopying userboot.so and boot files…\n"
 cd build
 
 cp -vfr ../test/* ../../lib/
