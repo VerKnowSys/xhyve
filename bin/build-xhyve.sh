@@ -18,7 +18,7 @@ printf "\n\nCloning main xhyve repository\n"
 git clone -q "${_origin}mist64/${_suffix}" src
 cd src
 
-for _repo_pr in dborca pr1ntf zchee dwoz bonifaido; do
+for _repo_pr in dborca pr1ntf zchee dwoz; do # bonifaido
     set -e
     git pull --no-verify --force --squash --strategy recursive "${_origin}${_repo_pr}/${_suffix}" && \
       printf "\nPulled changes from repository: ${_origin}${_repo_pr}/${_suffix}\n"
@@ -43,14 +43,15 @@ printf "\n\nConfiguring hardened compiler options for xhyve…\n"
 sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|;" config.mk
 
 set -e
-#  --param ssp-buffer-size=4 \\
-#  -D_FORTIFY_SOURCE=2 \\
-printf "\nCFLAGS_SECURITY := \\
-  -ftrapv \\
-  -fstack-protector \\
-  -fno-strict-overflow \\
-  -Wformat \\
-  -Wformat-security \
+printf "\nCFLAGS_SECURITY := --param ssp-buffer-size=4 \\
+-fsanitize=safe-stack \\
+-D_FORTIFY_SOURCE=2 \\
+-fstack-protector \\
+-fstrict-aliasing \\
+-fno-strict-overflow \\
+-Wformat \\
+-Wformat-security \\
+-ftrapv \\
 " >> config.mk
 set +e
 sed -i '' -e 's|en_US.US-ASCII|en_GB.UTF-8|;' config.mk
