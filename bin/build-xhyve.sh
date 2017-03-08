@@ -40,7 +40,7 @@ done
 
 
 printf "\n\nConfiguring hardened compiler options for xhyve…\n"
-sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|;" config.mk
+sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-O3|g" config.mk
 
 set -e
 printf "\nCFLAGS_SECURITY := --param ssp-buffer-size=4 \\
