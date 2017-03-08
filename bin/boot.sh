@@ -31,7 +31,7 @@ OPTIONS="-H -w"
 #
 # start HardenedBSD:
 # NOTE: sudo is necessary only for NET virtio-net to work :()
-sudo bin/xhyve \
+sudo $(pwd)/bin/xhyve \
     ${UUID} \
     ${ACPI} \
     ${MEM} \
