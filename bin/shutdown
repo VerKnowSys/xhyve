@@ -1,6 +1,7 @@
 #!/bin/sh
 
 sudo pkill -TERM -o xhyve
+touch ".nostart"
 sync
 echo "Shutting down xHyve…"
 sleep 3
