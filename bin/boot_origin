@@ -1,0 +1,19 @@
+#!/bin/sh
+
+
+DEFAULT_ORIGIN="Studio/VMs/xhyve-1.zvol@origin"
+
+
+sudo pkill -TERM -o xhyve
+sync
+sudo pkill -KILL -o xhyve
+sync
+clear
+reset
+
+
+echo "Rolling back to snapshot: ${DEFAULT_ORIGIN}"
+zfs rollback -r ${DEFAULT_ORIGIN}
+
+echo "Booting new xHyve instance…"
+bin/boot.sh
