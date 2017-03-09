@@ -2,6 +2,7 @@
 
 
 _origin="https://github.com/"
+_arch="x86_64"
 _suffix="xhyve.git"
 _userboot="userboot.so"
 _timestamp="$(date +%F-%s)"
@@ -11,14 +12,14 @@ reset
 printf "Cleaning old src…\n"
 rm -vf bin/xhyve lib/${_userboot}
 rm -rf src
-mkdir -p lib
+mkdir -p lib sbin
 
 set -e
 printf "\n\nCloning main xhyve repository\n"
 git clone -q "${_origin}mist64/${_suffix}" src
 cd src
 
-for _repo_pr in dborca pr1ntf zchee dwoz; do # bonifaido
+for _repo_pr in dborca; do # pr1ntf bonifaido zchee dwoz
     set -e
     git pull --no-verify --force --squash --strategy recursive "${_origin}${_repo_pr}/${_suffix}" && \
       printf "\nPulled changes from repository: ${_origin}${_repo_pr}/${_suffix}\n"
@@ -65,6 +66,9 @@ install -v test/${_userboot} ../lib/
 
 printf "\n\nInstalling xhyve…\n"
 install -v build/xhyve ../bin/xhyve
+
+test -x ../sbin/xhyve.${_arch} || \
+  install -v build/xhyve ../sbin/xhyve.${_arch}
 
 cd ../
 set +e

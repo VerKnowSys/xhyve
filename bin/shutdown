@@ -1,0 +1,6 @@
+#!/bin/sh
+
+sudo pkill -TERM -o xhyve
+sync
+echo "Shutting down xHyve…"
+sleep 3
