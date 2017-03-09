@@ -44,6 +44,12 @@ w # write changes, sync
 y # and… no more popups!
 ```
 
+If you're as lazy as me, just do:
+
+```
+printf "t\n1\n6A898CC3-1DD2-11B2-99A6-080020736631\nw\nY\nq\n" | sudo gdisk /dev/rdisk3
+```
+
 
 After successful zvol creation, a virtual device will be assigned to it automatically. To find out name of the device try this:
 
