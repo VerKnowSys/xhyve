@@ -32,6 +32,19 @@ zfs create -sV 50g Studio/VMs/xhyve-1.zvol
 
 NOTE: If macOS screams about uninitialized disk, click ignore. It doesn't affect process here. Later please use this solution: https://openzfsonosx.org/wiki/Suppressing_the_annoying_pop-up, to get rid of that popup.
 
+In my case all I had to do this to get rid of it:
+
+```
+sudo gdisk /dev/rdisk3
+p # to see partitions, by default there will be 1 and 2
+t # change partition type
+1 # of first partition of rdisk3
+6A898CC3-1DD2-11B2-99A6-080020736631 # with this UUID
+w # write changes, sync
+y # and… no more popups!
+```
+
+
 After successful zvol creation, a virtual device will be assigned to it automatically. To find out name of the device try this:
 
 ```
