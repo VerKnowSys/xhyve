@@ -31,12 +31,13 @@ failure () {
     exit "${2}"
 }
 
-_pwd="$(pwd >/dev/null)"
+_a_pwd="$(/bin/pwd >/dev/null)"
+_pwd="${_a_pwd:-.}"
 test -d "${_pwd}/sbin" || failure "Missing ${_pwd}/sbin" 176
 test -d "${_pwd}/bin" || failure "Missing ${_pwd}/bin" 177
 test -x "${_pwd}/bin/boot.sh" || failure "Missing ${_pwd}/bin/boot.sh" 178
 
-XHYVE_BIN="${_pwd:-.}/sbin/xhyve.${ARCH}"
+XHYVE_BIN="${_pwd}/sbin/xhyve.${ARCH}"
 if [ ! -x "${XHYVE_BIN}" ]; then
     echo "No XHyve binary: ${XHYVE_BIN}. Invoking build process: bin/build-xhyve"
     bin/build-xhyve.sh
