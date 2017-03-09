@@ -19,6 +19,7 @@ Studio   952G   746G   206G         -    36%    78%  1.10x  ONLINE  -
 
 `Studio` pool, contains `VMs` dataset (created earlier, by just: `zfs create Studio/VMs`)
 
+```
 ⇢ zfs list Studio/VMs
 NAME         USED  AVAIL  REFER  MOUNTPOINT
 Studio/VMs  65.9G   176G  57.0G  /Studio/VMs
