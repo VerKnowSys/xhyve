@@ -25,6 +25,7 @@ if [ "Darwin" = "$(uname 2>/dev/null)" ]; then
     VD_STABLE="${HOME}/Library/VMS/xh_stable.vd"
     if [ "dmilith" = "${USER}" ]; then
         VD_CURRENT="/dev/rdisk3" # Use ZVOL
+        VD_STABLE="/Studio/VMs/xh_stable.vd"
     fi
 else
     mkdir -p "${HOME}/.VMS"
