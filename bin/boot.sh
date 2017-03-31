@@ -44,8 +44,14 @@ else
 fi
 
 if [ ! -f "${VD_STABLE}" ]; then
-    echo "Found no virtual disk file: ${VD_STABLE}. It will be created and initialized with size: ${VD_SIZE}GiB"
-    dd -v if=/dev/zero of="${VD_STABLE}" bs=1 count=0 seek=${VD_SIZE}g
+    echo "Found no virtual disk file: ${VD_STABLE}. It will be created and initialized with size: ${VD_SIZE}"
+    dd \
+        if="/dev/zero" \
+        of="${VD_STABLE}" \
+        conv="sparse" \
+        seek="${VD_SIZE}" \
+        bs=1 \
+        count=0
 fi
 
 echo "System release: ${RELEASE}"
