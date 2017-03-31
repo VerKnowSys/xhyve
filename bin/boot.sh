@@ -1,18 +1,11 @@
 #!/bin/sh
 
 
-# use raw zvol disk:
-HDD1="/dev/rdisk3" # NOTE: change 3 here for your own one!!
-INSTALLER_DISK_IMAGE="/Data/ISO/HardenedBSD-11-STABLE-v46.15-amd64-memstick.img"
-BOOTVOLUME="${HDD1}"
-
-IMG_HDD0="-s 4:0,ahci-hd,${INSTALLER_DISK_IMAGE}"
-IMG_HDD1="-s 4:1,ahci-hd,${HDD1}"
-
-
+RELEASE="${1:-stable}"
+VD_SIZE="10" # GiB
 UUID="-U 13725C2F-FF66-4F9D-AD7F-D3FC94FBF40F"
-SMP="-c 8"
-MEM="-m 12g"
+SMP="-c 7"
+MEM="-m 10g"
 NET="-s 2:0,virtio-net"
 PCI_DEV="-s 0:0,hostbridge"
 LPC_DEV="-s 31,lpc -l com1,stdio"
@@ -23,6 +16,41 @@ KERNELENV=""
 ARCH="x86_64"
 USERBOOT="lib/userboot.so"
 
+INSTALLER_STABLE="/Data/ISO/HardenedBSD-11-STABLE-v46.16-amd64-memstick.img"
+INSTALLER_CURRENT="${INSTALLER_STABLE}"
+
+if [ "Darwin" = "$(uname 2>/dev/null)" ]; then
+    mkdir -p "${HOME}/Library/VMS"
+    VD_CURRENT="${HOME}/Library/VMS/xh_current.vd"
+    VD_STABLE="${HOME}/Library/VMS/xh_stable.vd"
+    if [ "dmilith" = "${USER}" ]; then
+        VD_CURRENT="/dev/rdisk3" # Use ZVOL
+    fi
+else
+    mkdir -p "${HOME}/.VMS"
+    VD_CURRENT="${HOME}/.VMS/xh_current.vd"
+    VD_STABLE="${HOME}/.VMS/xh_stable.vd"
+fi
+
+if [ "stable" = "${RELEASE}" ]; then
+    IMG_HDD0="-s 4:0,ahci-hd,${INSTALLER_STABLE}"
+    IMG_HDD1="-s 4:1,ahci-hd,${VD_STABLE}"
+    BOOTVOLUME="${VD_STABLE}"
+else
+    IMG_HDD0="-s 4:0,ahci-hd,${INSTALLER_CURRENT}"
+    IMG_HDD1="-s 4:1,ahci-hd,${VD_CURRENT}"
+    BOOTVOLUME="${VD_CURRENT}"
+fi
+
+if [ ! -f "${VD_STABLE}" ]; then
+    echo "Found no virtual disk file: ${VD_STABLE}. It will be created and initialized with size: ${VD_SIZE}GiB"
+    dd -v if=/dev/zero of="${VD_STABLE}" bs=1 count=0 seek=${VD_SIZE}g
+fi
+
+echo "System release: ${RELEASE}"
+echo "Boot volume: ${BOOTVOLUME}"
+echo "CPUs: ${SMP}"
+echo "MEM: ${MEM}"
 
 # --------------------------------------------------------------
 
@@ -44,7 +72,7 @@ if [ ! -x "${XHYVE_BIN}" ]; then
 fi
 
 # NOTE: sudo is necessary only for NET virtio-net to work :()
-sudo "${XHYVE_BIN}" \
+sudo -- "${XHYVE_BIN}" \
     ${UUID} \
     ${ACPI} \
     ${MEM} \
@@ -52,7 +80,6 @@ sudo "${XHYVE_BIN}" \
     ${PCI_DEV} \
     ${LPC_DEV} \
     ${NET} \
-    ${IMG_CD} \
     ${IMG_HDD0} \
     ${IMG_HDD1} \
     ${OPTIONS} \
