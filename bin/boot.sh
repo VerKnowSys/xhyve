@@ -1,5 +1,7 @@
 #!/bin/sh
 
+clear
+set -e
 
 RELEASE="${1:-stable}"
 VD_SIZE="40g" # GiB
@@ -93,4 +95,5 @@ sudo -- "${XHYVE_BIN}" \
     ${EXPERIMENTAL_OPTIONS} \
     -f fbsd,${USERBOOT},${BOOTVOLUME},"${KERNELENV}"
 
+set +e
 exit
