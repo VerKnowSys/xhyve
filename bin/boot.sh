@@ -2,7 +2,7 @@
 
 
 RELEASE="${1:-stable}"
-VD_SIZE="10" # GiB
+VD_SIZE="40g" # GiB
 UUID="-U 13725C2F-FF66-4F9D-AD7F-D3FC94FBF40F"
 SMP="-c 7"
 MEM="-m 10g"
