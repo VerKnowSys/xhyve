@@ -8,7 +8,7 @@ sed -i '' \
     -e 's|BOOTVOLUME="${VD_CURRENT}"|BOOTVOLUME="${INSTALLER_CURRENT}"|g; s|BOOTVOLUME="${VD_STABLE}"|BOOTVOLUME="${INSTALLER_STABLE}"|g;' \
     bin/boot.sh 2>/dev/null
 
-bin/boot.sh
+bin/boot.sh "${1}"
 
 echo "Switch to default boot device"
 sed -i '' \
