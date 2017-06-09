@@ -1,4 +1,4 @@
-# xHyve + ServeD marriage
+# xHyve + ZFS marriage
 
 
 ## Requirements:
