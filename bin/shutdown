@@ -1,6 +1,7 @@
 #!/bin/sh
 
-sudo pkill -TERM -o xhyve
+sudo killall -TERM -o xhyve.x86_64 && \
+sudo killall -TERM -o xhyve.x86_64
 touch ".nostart"
 sync
 echo "Shutting down xHyve…"

@@ -19,40 +19,36 @@ printf "\n\nCloning main xhyve repository\n"
 git clone -q "${_origin}mist64/${_suffix}" src
 cd src
 
-for _repo_pr in dborca; do # pr1ntf bonifaido zchee dwoz
-    set -e
-    git pull --no-verify --force --squash --strategy recursive "${_origin}${_repo_pr}/${_suffix}" && \
-      printf "\nPulled changes from repository: ${_origin}${_repo_pr}/${_suffix}\n"
+# for _repo_pr in dborca; do # pr1ntf bonifaido zchee dwoz
+#     set -e
+#     git pull --no-verify --force --squash --strategy recursive "${_origin}${_repo_pr}/${_suffix}" && \
+#       printf "\nPulled changes from repository: ${_origin}${_repo_pr}/${_suffix}\n"
 
-    set +e
-    git add --all src/*
-    echo "Commited changeset from repository: ${_repo_pr} @ ${_timestamp}" > /tmp/cmtmsg1
-    git commit --all --no-verify --file /tmp/cmtmsg1
+#     set +e
+#     git add --all src/*
+#     echo "Commited changeset from repository: ${_repo_pr} @ ${_timestamp}" > /tmp/cmtmsg1
+#     git commit --all --no-verify --file /tmp/cmtmsg1
 
-    git status 2>/dev/null | egrep '^nothing to commit, working tree clean' >/dev/null 2>&1
-    if [ "0" != "${?}" ]; then
-        set -e
-        git add --all src/*
-        echo "New changes from repository: ${_repo_pr} @ ${_timestamp}" > /tmp/cmtmsg2
-        git commit --all --file /tmp/cmtmsg2
-        git merge -a -s recursive
-    fi
-done
+#     git status 2>/dev/null | egrep '^nothing to commit, working tree clean' >/dev/null 2>&1
+#     if [ "0" != "${?}" ]; then
+#         set -e
+#         git add --all src/*
+#         echo "New changes from repository: ${_repo_pr} @ ${_timestamp}" > /tmp/cmtmsg2
+#         git commit --all --file /tmp/cmtmsg2
+#         git merge -a -s recursive
+#     fi
+# done
 
 
 printf "\n\nConfiguring hardened compiler options for xhyve…\n"
-sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-O3|g" config.mk
+sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-Os -w -fPIC -ffp-contract=fast -msse -msse2 -msse3 -msse4 -msse4.1 -msse4.2 -mfma -mavx -mno-avx2|g" config.mk
 
 set -e
 printf "\nCFLAGS_SECURITY := --param ssp-buffer-size=4 \\
--fsanitize=safe-stack \\
 -D_FORTIFY_SOURCE=2 \\
--fstack-protector \\
--fstrict-aliasing \\
 -fno-strict-overflow \\
 -Wformat \\
 -Wformat-security \\
--ftrapv \\
 " >> config.mk
 set +e
 sed -i '' -e 's|en_US.US-ASCII|en_GB.UTF-8|;' config.mk

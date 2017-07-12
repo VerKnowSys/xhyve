@@ -6,7 +6,7 @@ set -e
 RELEASE="${1:-stable}"
 VD_SIZE="40g" # GiB
 UUID="-U 13725C2F-FF66-4F9D-AD7F-D3FC94FBF40F"
-SMP="-c 7"
+SMP="-c 6"
 MEM="-m 10g"
 NET="-s 2:0,virtio-net"
 PCI_DEV="-s 0:0,hostbridge"
@@ -26,8 +26,8 @@ if [ "Darwin" = "$(uname 2>/dev/null)" ]; then
     VD_CURRENT="${HOME}/Library/VMS/xh_current.vd"
     VD_STABLE="${HOME}/Library/VMS/xh_stable.vd"
     if [ "dmilith" = "${USER}" ]; then
-        VD_CURRENT="/dev/rdisk3" # Use ZVOL
-        VD_STABLE="/Studio/VMs/xh_stable.vd"
+        VD_STABLE="/dev/rdisk3"
+        VD_CURRENT="/dev/rdisk5"
     fi
 else
     mkdir -p "${HOME}/.VMS"
@@ -36,25 +36,26 @@ else
 fi
 
 if [ "stable" = "${RELEASE}" ]; then
-    IMG_HDD0="-s 4:0,ahci-hd,${INSTALLER_STABLE}"
-    IMG_HDD1="-s 4:1,ahci-hd,${VD_STABLE}"
+    IMG_HDD0="-s 4:0,virtio-blk,${INSTALLER_STABLE}"
+    IMG_HDD1="-s 4:1,virtio-blk,${VD_STABLE}"
     BOOTVOLUME="${VD_STABLE}"
 else
-    IMG_HDD0="-s 4:0,ahci-hd,${INSTALLER_CURRENT}"
-    IMG_HDD1="-s 4:1,ahci-hd,${VD_CURRENT}"
+    UUID="-U 13725C2F-FF66-4F9D-AD7F-D3FC94FBAAAA"
+    IMG_HDD0="-s 4:0,virtio-blk,${INSTALLER_CURRENT}"
+    IMG_HDD1="-s 4:1,virtio-blk,${VD_CURRENT}"
     BOOTVOLUME="${VD_CURRENT}"
 fi
 
-if [ ! -f "${VD_STABLE}" ]; then
-    echo "Found no virtual disk file: ${VD_STABLE}. It will be created and initialized with size: ${VD_SIZE}"
-    dd \
-        if="/dev/zero" \
-        of="${VD_STABLE}" \
-        conv="sparse" \
-        seek="${VD_SIZE}" \
-        bs=1 \
-        count=0
-fi
+# if [ ! -e "${VD_STABLE}" ]; then
+#     echo "Found no virtual disk file: ${VD_STABLE}. It will be created and initialized with size: ${VD_SIZE}"
+#     dd \
+#         if="/dev/zero" \
+#         of="${VD_STABLE}" \
+#         conv="sparse" \
+#         seek="${VD_SIZE}" \
+#         bs=1 \
+#         count=0
+# fi
 
 echo "System release: ${RELEASE}"
 echo "Boot volume: ${BOOTVOLUME}"
