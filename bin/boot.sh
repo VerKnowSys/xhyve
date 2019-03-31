@@ -3,11 +3,13 @@
 clear
 set -e
 
+ZVOL_DEVICE="/dev/rdiskMN" # change to your local value
+
 RELEASE="${1:-stable}"
-VD_SIZE="40g" # GiB
+VD_SIZE="20g" # GiB
 UUID="-U 13725C2F-FF66-4F9D-AD7F-D3FC94FBF40F"
 SMP="-c 6"
-MEM="-m 10g"
+MEM="-m 11g"
 NET="-s 2:0,virtio-net"
 PCI_DEV="-s 0:0,hostbridge"
 LPC_DEV="-s 31,lpc -l com1,stdio"
@@ -26,8 +28,8 @@ if [ "Darwin" = "$(uname 2>/dev/null)" ]; then
     VD_CURRENT="${HOME}/Library/VMS/xh_current.vd"
     VD_STABLE="${HOME}/Library/VMS/xh_stable.vd"
     if [ "dmilith" = "${USER}" ]; then
-        VD_STABLE="/dev/rdisk3"
-        VD_CURRENT="/dev/rdisk5"
+        VD_STABLE="${ZVOL_DEVICE}"
+        VD_CURRENT="${ZVOL_DEVICE}"
     fi
 else
     mkdir -p "${HOME}/.VMS"

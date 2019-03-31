@@ -10,14 +10,14 @@ _timestamp="$(date +%F-%s)"
 reset
 
 printf "Cleaning old src…\n"
-rm -vf bin/xhyve lib/${_userboot}
-rm -rf src
-mkdir -p lib sbin
+rm -vf "bin/xhyve" "lib/${_userboot}"
+rm -rf "src"
+mkdir -p "lib" "sbin"
 
 set -e
 printf "\n\nCloning main xhyve repository\n"
-git clone -q "${_origin}mist64/${_suffix}" src
-cd src
+git clone -q "${_origin}mist64/${_suffix}" "src"
+cd "src"
 
 # for _repo_pr in dborca; do # pr1ntf bonifaido zchee dwoz
 #     set -e
@@ -41,7 +41,7 @@ cd src
 
 
 printf "\n\nConfiguring hardened compiler options for xhyve…\n"
-sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-Os -w -fPIC -ffp-contract=fast -msse -msse2 -msse3 -msse4 -msse4.1 -msse4.2 -mfma -mavx -mno-avx2|g" config.mk
+sed -i '' -e "s|-g|\$(CFLAGS_SECURITY)|; s|-Os|-Oz -w -fPIC -ffp-contract=fast -msse -msse2 -msse3 -msse4 -msse4.1 -msse4.2 -mfma -mavx -mno-avx2|g" config.mk
 
 set -e
 printf "\nCFLAGS_SECURITY := --param ssp-buffer-size=4 \\
@@ -51,7 +51,7 @@ printf "\nCFLAGS_SECURITY := --param ssp-buffer-size=4 \\
 -Wformat-security \\
 " >> config.mk
 set +e
-sed -i '' -e 's|en_US.US-ASCII|en_GB.UTF-8|;' config.mk
+sed -i '' -e 's|en_US.US-ASCII|en_US.UTF-8|;' config.mk
 set -e
 
 printf "\n\nBuilding xhyve…\n"
